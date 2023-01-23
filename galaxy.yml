@@ -1,0 +1,22 @@
+authors: 
+  - Chen Sagi (@chensagi)
+  - Michal Greenberg (@micahlg)
+dependencies: {}
+description: A collection of Ansible Modules for Radware devices
+documentation: ''
+homepage: https://www.radware.com
+issues: https://github.com/Radware/alteon_modules/issues
+license_file: 'COPYING'
+name: alteon
+namespace: radware
+readme: README.md
+repository: https://github.com/Radware/alteon_modules
+tags: 
+- radware
+- alteon
+- cloud
+- collection
+- networking
+- sdn
+version: 0.0.1
+
