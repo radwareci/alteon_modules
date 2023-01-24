@@ -47,7 +47,7 @@ options:
         aliases:
         - pass
         - pwd
-       validate_certs:
+      validate_certs:
         description:
           - If C(no), SSL certificates will not be validated.
           - This should only set to C(no) used on personally controlled sites using self-signed certificates.
