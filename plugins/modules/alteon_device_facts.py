@@ -16,231 +16,248 @@ module: alteon_device_facts
 short_description: Collect facts from Alteon device
 description:
   - Collect facts from Alteon device
-version_added: null
-author: 
+version_added: 1.0.0
+author:
   - Leon Meguira (@leonmeguira)
 options:
   provider:
     description:
       - Radware Alteon connection details.
     required: true
+    type: dict
     suboptions:
       server:
         description:
           - Radware Alteon IP.
         required: true
         default: null
+        type: str
       user:
         description:
           - Radware Alteon username.
         required: true
         default: null
+        type: str
       password:
         description:
           - Radware Alteon password.
         required: true
         default: null
+        type: str
+        aliases:
+        - pass
+        - pwd
       validate_certs:
         description:
           - If C(no), SSL certificates will not be validated.
           - This should only set to C(no) used on personally controlled sites using self-signed certificates.
         required: true
-        default: null
+        default: true
         type: bool
       https_port:
         description:
           - Radware Alteon https port.
         required: true
-        default: null
+        default: 443
+        type: int
       ssh_port:
         description:
           - Radware Alteon ssh port.
         required: true
-        default: null
+        default: 22
+        type: int
       timeout:
         description:
           - Timeout for connection.
         required: true
-        default: null
-  gather_subset:
+        default: 20
+        type: int
+  gather_facts:
     description:
       - Facts subsets to collects/ignore.
       - A list of facts to include/exclude in output.
       - values starts with C(!)  specify that a specific subset should not be collected.
       - this module execute read command over all alteon configurators and output objects
-      - for some configurators *_stats & *_state bean are available 
+      - for some configurators *_stats & *_state bean are available
       - for more details about certain choice , please refer to the approriate module
     required: True
     default: null
+    type: list
     choices:
-      - all
-      - (!)all
-      - system_info
-      - (!)system_info
-      - system_times
-      - (!)system_times
-      - system_capacity
-      - (!)system_capacity
-      - appshape
-      - (!)appshape
-      - gslb_network
-      - (!)gslb_network
-      - gslb_rule
-      - (!)gslb_rule
-      - hc_http
-      - (!)hc_http
-      - hc_logexp
-      - (!)hc_logexp
-      - hc_tcp
-      - (!)hc_tcp
-      - server
-      - (!)server
-      - server_state
-      - (!)server_state
-      - server_group
-      - (!)server_group
-      - ssl_cert
-      - (!)ssl_cert
-      - ssl_client_auth_policy
-      - (!)ssl_client_auth_policy
-      - ssl_key
-      - (!)ssl_key
-      - ssl_policy
-      - (!)ssl_policy
-      - ssl_server_auth_policy
-      - (!)ssl_server_auth_policy
-      - vadc_instance
-      - (!)vadc_instance
-      - vadc_instance_state
-      - (!)vadc_instance_state
-      - virtual_server
-      - (!)virtual_server
-      - virtual_service
-      - (!)virtual_service
-      - virtual_service_state
-      - (!)virtual_service_state
-      - l2_vlan
-      - (!)l2_vlan
-      - sys_local_user
-      - (!)sys_local_user
-      - sys_management_access
-      - (!)sys_management_access
-      - sys_predefined_local_users
-      - (!)sys_predefined_local_users
-      - sys_radius_auth
-      - (!)sys_radius_auth
-      - sys_tacacs_auth
-      - (!)sys_tacacs_auth
-      - sys_snmp
-      - (!)sys_snmp
-      - sys_logging
-      - (!)sys_logging
-      - sys_vx_peer_sync
-      - (!)sys_vx_peer_sync
-      - sys_alerts
-      - (!)sys_alerts
-      - sys_dns_client
-      - (!)sys_dns_client
-      - sys_time_date
-      - (!)sys_time_date
-      - physical_port
-      - (!)physical_port
-      - physical_port_state
-      - (!)physical_port_state
-      - physical_port_stats
-      - (!)physical_port_stats
-      - lacp_aggregation
-      - (!)lacp_aggregation
-      - lacp_aggregation_state
-      - (!)lacp_aggregation_state
-      - spanning_tree
-      - (!)spanning_tree
-      - l2_lldp
-      - (!)l2_lldp
-      - l3_interface
-      - (!)l3_interface
-      - l3_interface_state
-      - (!)l3_interface_state
-      - l3_gateway
-      - (!)l3_gateway
-      - l3_gateway_state
-      - (!)l3_gateway_state
-      - l3_bootp_relay
-      - (!)l3_bootp_relay
-      - l3_static_routes
-      - (!)l3_static_routes
-      - ha_floating_ip
-      - (!)ha_floating_ip
-      - ha_config_sync
-      - (!)ha_config_sync
-      - high_availability
-      - (!)high_availability
-      - global_redirection
-      - (!)global_redirection
-      - global_redirection_state
-      - (!)global_redirection_state
-      - fdn_server
-      - (!)fdn_server
-      - network_class_ip
-      - (!)network_class_ip
-      - network_class_region
-      - (!)network_class_region
-      - dns_responders
-      - (!)dns_responders      
-      - slb_pip
-      - (!)slb_pip
-      - slb_pip6
-      - (!)slb_pip6
-      - ha_service
-      - (!)ha_service               
-      - snmpv3_target_params
-      - (!)snmpv3_target_params               
-      - snmpv3_target_addr_new_cfg
-      - (!)snmpv3_target_addr_new_cfg               
-      - bgp_global
-      - (!)bgp_global  
-      - bgp_peer
-      - (!)bgp_peer                            
-      - group_real_server
-      - (!)group_real_server                            
-      - bgp_aggr
-      - (!)bgp_aggr                            
-      - alteon_cli_command
-      - (!)alteon_cli_command  
-      - snmpv3_usm_user
-      - (!)snmpv3_usm_user  
-      - snmpv3_group
-      - (!)snmpv3_group  
-      - snmpv3_community
-      - (!)snmpv3_community  
-      - snmpv3_view_tree_family
-      - (!)snmpv3_view_tree_family               
-      - snmpv3_notify
-      - (!)snmpv3_notify               
-      - snmp_general
-      - (!)snmp_general
-      - gel
-      - (!)gel
-      - slb_port
-      - (!)slb_port
-      - snmpv3_access
-      - (!)snmpv3_access
-      - l7_content_class
-      - (!)l7_content_class
-      - l7_content_class_hostname
-      - (!)l7_content_class_hostname
-      - l7_content_class_path
-      - (!)l7_content_class_path
-      - l7_content_class_filename
-      - (!)l7_content_class_filename
-      - l7_content_class_filetype
-      - (!)l7_content_class_filetype
-      - l7_content_class_header
-      - (!)l7_content_class_header
-      - l7_content_class_cookie
-      - (!)l7_content_class_cookie
-      - content_rule
-      - (!)content_rule
+    - all
+    - "!all"
+    - system_info
+    - "!system_info"
+    - system_times
+    - "!system_times"
+    - system_capacity
+    - "!system_capacity"
+    - adc_software_images
+    - "!adc_software_images"
+    - vx_software_images
+    - "!vx_software_images"
+    - appshape
+    - "!appshape"
+    - gslb_network
+    - "!gslb_network"
+    - gslb_rule
+    - "!gslb_rule"
+    - hc_http
+    - "!hc_http"
+    - hc_logexp
+    - "!hc_logexp"
+    - hc_tcp
+    - "!hc_tcp"
+    - server
+    - "!server"
+    - server_state
+    - "!server_state"
+    - server_group
+    - "!server_group"
+    - ssl_cert
+    - "!ssl_cert"
+    - ssl_client_auth_policy
+    - "!ssl_client_auth_policy"
+    - ssl_key
+    - "!ssl_key"
+    - ssl_policy
+    - "!ssl_policy"
+    - ssl_server_auth_policy
+    - "!ssl_server_auth_policy"
+    - vadc_instance
+    - "!vadc_instance"
+    - vadc_instance_state
+    - "!vadc_instance_state"
+    - virtual_server
+    - "!virtual_server"
+    - virtual_service
+    - "!virtual_service"
+    - virtual_service_state
+    - "!virtual_service_state"
+    - l2_vlan
+    - "!l2_vlan"
+    - sys_local_user
+    - "!sys_local_user"
+    - sys_management_access
+    - "!sys_management_access"
+    - sys_predefined_local_users
+    - "!sys_predefined_local_users"
+    - sys_radius_auth
+    - "!sys_radius_auth"
+    - sys_tacacs_auth
+    - "!sys_tacacs_auth"
+    - sys_snmp
+    - "!sys_snmp"
+    - sys_logging
+    - "!sys_logging"
+    - sys_vx_peer_sync
+    - "!sys_vx_peer_sync"
+    - sys_alerts
+    - "!sys_alerts"
+    - sys_dns_client
+    - "!sys_dns_client"
+    - sys_time_date
+    - "!sys_time_date"
+    - physical_port
+    - "!physical_port"
+    - physical_port_state
+    - "!physical_port_state"
+    - physical_port_stats
+    - "!physical_port_stats"
+    - lacp_aggregation
+    - "!lacp_aggregation"
+    - lacp_aggregation_state
+    - "!lacp_aggregation_state"
+    - spanning_tree
+    - "!spanning_tree"
+    - l2_lldp
+    - "!l2_lldp"
+    - l3_interface
+    - "!l3_interface"
+    - l3_interface_state
+    - "!l3_interface_state"
+    - l3_gateway
+    - "!l3_gateway"
+    - l3_gateway_state
+    - "!l3_gateway_state"
+    - l3_bootp_relay
+    - "!l3_bootp_relay"
+    - l3_static_routes
+    - "!l3_static_routes"
+    - ha_floating_ip
+    - "!ha_floating_ip"
+    - ha_config_sync
+    - "!ha_config_sync"
+    - high_availability
+    - "!high_availability"
+    - global_redirection
+    - "!global_redirection"
+    - global_redirection_state
+    - "!global_redirection_state"
+    - fdn_server
+    - "!fdn_server"
+    - network_class_ip
+    - "!network_class_ip"
+    - network_class_region
+    - "!network_class_region"
+    - dns_responders
+    - "!dns_responders"
+    - ssl_cert_group
+    - "!ssl_cert_group"
+    - slb_pip
+    - "!slb_pip"
+    - slb_pip6
+    - "!slb_pip6"
+    - ha_service
+    - "!ha_service"
+    - snmpv3_target_params
+    - "!snmpv3_target_params"
+    - snmpv3_target_addr_new_cfg
+    - "!snmpv3_target_addr_new_cfg"
+    - bgp_global
+    - "!bgp_global"
+    - bgp_peer
+    - "!bgp_peer"
+    - group_real_server
+    - "!group_real_server"
+    - bgp_aggr
+    - "!bgp_aggr"
+    - alteon_cli_command
+    - "!alteon_cli_command"
+    - snmpv3_usm_user
+    - "!snmpv3_usm_user"
+    - snmpv3_group
+    - "!snmpv3_group"
+    - snmpv3_community
+    - "!snmpv3_community"
+    - snmpv3_view_tree_family
+    - "!snmpv3_view_tree_family"
+    - snmpv3_notify
+    - "!snmpv3_notify"
+    - snmp_general
+    - "!snmp_general"
+    - gel
+    - "!gel"
+    - slb_port
+    - "!slb_port"
+    - snmpv3_access
+    - "!snmpv3_access"
+    - l7_content_class
+    - "!l7_content_class"
+    - l7_content_class_hostname
+    - "!l7_content_class_hostname"
+    - l7_content_class_path
+    - "!l7_content_class_path"
+    - l7_content_class_filename
+    - "!l7_content_class_filename"
+    - l7_content_class_filetype
+    - "!l7_content_class_filetype"
+    - l7_content_class_header
+    - "!l7_content_class_header"
+    - l7_content_class_cookie
+    - "!l7_content_class_cookie"
+    - content_rule
+    - "!content_rule"
 notes:
   - Requires Radware alteon Python SDK.
 requirements:
@@ -250,7 +267,7 @@ requirements:
 EXAMPLES = r'''
 - name: alteon device configuration
   radware.alteon.alteon_device_facts:
-    provider: 
+    provider:
       server: 192.168.1.1
       user: admin
       password: admin
@@ -273,7 +290,7 @@ RETURN = r'''
 result:
   description: facts parameters object type
   returned: success
-  type: dictionary
+  type: dict
   sample:
     facts_obj: {
         "global_redirection": [
@@ -542,7 +559,7 @@ class ArgumentSpecs(object):
         self.argument_spec.update(radware_server_argument_spec)
 
     def _subset(self):
-        subset = list()
+        subset = []
         subset.extend(['all', '!all', SYS_INFO_FACTS, self._exclude(SYS_INFO_FACTS), SYS_TIMES_FACTS,
                        self._exclude(SYS_TIMES_FACTS), SYS_CAPACITY_FACTS, self._exclude(SYS_CAPACITY_FACTS),
                        ADC_SOFTWARE_FACTS, self._exclude(ADC_SOFTWARE_FACTS), VX_SOFTWARE_FACTS,
@@ -553,7 +570,7 @@ class ArgumentSpecs(object):
 
     @property
     def _mng_subset(self):
-        cfg_subset = list()
+        cfg_subset = []
         return cfg_subset
 
     @property
@@ -568,7 +585,7 @@ class ArgumentSpecs(object):
                     cfg_subset.append(self.stats(k))
                     cfg_subset.append(self._exclude(self.stats(k)))
 
-        cfg_subset = list()
+        cfg_subset = []
         meta = get_type_hints(AlteonConfigurators)
         for k, v in meta.items():
             cfg_subset.append(k)
@@ -578,15 +595,18 @@ class ArgumentSpecs(object):
 
     @staticmethod
     def _exclude(k):
-        return "!{0}".format(k)
+        # return "!{0}".format(k)
+        return f"!{k}"
 
     @staticmethod
     def state(k):
-        return "{0}_state".format(k)
+        # return "{0}_state".format(k)
+        return f"{k}_state"
 
     @staticmethod
     def stats(k):
-        return "{0}_stats".format(k)
+        # return "{0}_stats".format(k)
+        return f"{k}_stats"
 
 
 class ModuleManager(AlteonAnsibleModule):
@@ -598,21 +618,21 @@ class ModuleManager(AlteonAnsibleModule):
 
     def exec_module(self):
         facts_to_collect, exclude_facts = self.filter_excluded_facts()
-        result = dict()
+        result = {}
 
         try:
-            #self._device_mng.verify_device_accessible(retries=2)
+            # self._device_mng.verify_device_accessible(retries=2)
             result.update(self.collect_config_facts(facts_to_collect, exclude_facts))
             result.update(self.collect_mng_facts(facts_to_collect, exclude_facts))
         except RadwareError as e:
-            raise RadwareModuleError(e)
+            raise RadwareModuleError(e) from e
 
         return dict(facts_obj=result)
 
     def collect_mng_facts(self, facts_list, exclude_list):
-        result = dict()
-        system_info = dict()
-        system_times = dict()
+        result = {}
+        system_info = {}
+        system_times = {}
 
         for k, v in self._device_mng.info.device_sys_info().items():
             if k in MNG_TIME_PROPS:
@@ -647,7 +667,7 @@ class ModuleManager(AlteonAnsibleModule):
             return translated_beans
 
         def _read_beans(b_classes):
-            beans_res = dict()
+            beans_res = {}
             if b_classes:
                 for bean_class, bean_filter in b_classes.items():
                     beans = self._connection.rest.read_all(bean_class())
@@ -667,7 +687,7 @@ class ModuleManager(AlteonAnsibleModule):
                     cfg_beans = _read_beans(getattr(configurator, STATS_BEANS_VAR_NAME))
                     result.update({stats_fact_key: cfg_beans})
 
-        result = dict()
+        result = {}
         cfg_mng = DeviceConfigurationManager()
         vx_device = self._device_mng.info.is_vx
         container_device = self._device_mng.info.is_container
@@ -675,21 +695,21 @@ class ModuleManager(AlteonAnsibleModule):
         for key in get_type_hints(AlteonConfigurators):
             configurator = getattr(self._configurators, key)
             if ('all' in facts_list and key not in exclude_list) or key in facts_list:
-                if type(configurator) == SSLCertConfigurator and not vx_device:
+                # check if configurator type is SSLCertConfigurator
+                if isinstance(configurator, SSLCertConfigurator) and not vx_device:
                     result.update({key: cfg_mng.execute(configurator,
                                                         'read_all_cert_info', None).content_translate})
-                elif type(configurator) == SSLKeyConfigurator and not vx_device:
-#                if type(configurator) == SSLKeyConfigurator and not vx_device:
+                elif isinstance(configurator, SSLKeyConfigurator) and not vx_device:  # check if configurator type is SSLKeyConfigurator
                     result.update({key: cfg_mng.execute(configurator,
                                                         'read_all_key_info', None).content_translate})
-                elif type(configurator) in [VADCInstanceConfigurator, VXPeerSyncConfigurator] and not vx_device:
+                elif isinstance(configurator, (VADCInstanceConfigurator, VXPeerSyncConfigurator)) and not vx_device:
                     continue
-                elif type(configurator) in [SystemTimeDateConfigurator, SpanningTreeConfigurator, LLDPConfigurator,
-                                            LACPAggregationConfigurator] and not container_device:
+                elif isinstance(configurator, (SystemTimeDateConfigurator, SpanningTreeConfigurator, LLDPConfigurator,
+                                               LACPAggregationConfigurator)) and not container_device:
                     continue
-                elif type(configurator) in [SystemDNSClientConfigurator, BOOTPRelayConfigurator,
-                                            ConfigurationSyncConfigurator, HighAvailabilityConfigurator,
-                                            GlobalRedirectionConfigurator] and vx_device:
+                elif isinstance(configurator, (SystemDNSClientConfigurator, BOOTPRelayConfigurator,
+                                               ConfigurationSyncConfigurator, HighAvailabilityConfigurator,
+                                               GlobalRedirectionConfigurator)) and vx_device:
                     continue
                 else:
                     result.update({key: cfg_mng.execute(configurator,
