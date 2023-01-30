@@ -611,7 +611,7 @@ class ArgumentSpecs(object):
 
 class ModuleManager(AlteonAnsibleModule):
     def __init__(self, **kwargs):
-        super(ModuleManager, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self._facts = self.params['gather_facts']
         self._device_mng = AlteonManagement(self._connection)
         self._configurators = AlteonConfigurators(self._connection)

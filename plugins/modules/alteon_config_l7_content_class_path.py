@@ -203,7 +203,7 @@ from radware.alteon.sdk.configurators.l7_content_class_path import L7ContentClas
 
 class ModuleManager(AlteonConfigurationModule):
     def __init__(self, **kwargs):
-        super(ModuleManager, self).__init__(L7ContentClassPathConfigurator, **kwargs)
+        super().__init__(L7ContentClassPathConfigurator, **kwargs)
 
 
 def main():
