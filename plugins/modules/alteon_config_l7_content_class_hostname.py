@@ -193,7 +193,7 @@ from radware.alteon.sdk.configurators.l7_content_class_hostname import L7Content
 
 class ModuleManager(AlteonConfigurationModule):
     def __init__(self, **kwargs):
-        super(ModuleManager, self).__init__(L7ContentClassHostNameConfigurator, **kwargs)
+        super().__init__(L7ContentClassHostNameConfigurator, **kwargs)
 
 
 def main():

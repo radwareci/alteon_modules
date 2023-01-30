@@ -256,7 +256,7 @@ from radware.alteon.sdk.configurators.l7_content_class import L7ContentClassConf
 
 class ModuleManager(AlteonConfigurationModule):
     def __init__(self, **kwargs):
-        super(ModuleManager, self).__init__(L7ContentClassConfigurator, **kwargs)
+        super().__init__(L7ContentClassConfigurator, **kwargs)
 
 
 def main():
