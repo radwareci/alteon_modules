@@ -20,13 +20,6 @@ on:
     branches:
       - main
       - stable-*
-  pull_request:
-  # Run CI once per day (at 06:00 UTC)
-  # This ensures that even if there haven't been commits that we are still
-  # testing against latest version of ansible-test for each ansible-core
-  # version
-  schedule:
-    - cron: '0 6 * * *'
 
 concurrency:
   group: >-
@@ -93,7 +86,7 @@ jobs:
     # for the latest list.
     runs-on: >-
       ${{ contains(fromJson(
-          '["stable-2.9", "stable-2.10", "stable-2.11"]'
+          '["stable-2.14"]'
       ), matrix.ansible) && 'ubuntu-20.04' || 'ubuntu-latest' }}
     steps:
       # Run sanity tests inside a Docker container.
