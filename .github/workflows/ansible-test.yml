@@ -86,7 +86,8 @@ jobs:
     # runs-on: >-
     #   ${{ contains(fromJson(
     #       '["stable-2.9"]'
-    #   ), matrix.ansible) && 'ubuntu-20.04' || 'ubuntu-latest' }}
+    #   ), matrix.ansible) && 'ubuntu-20.04' || '' }}
+    runs-on: ubuntu-latest
     steps:
       # Run sanity tests inside a Docker container.
       # The docker container has all the pinned dependencies that are
