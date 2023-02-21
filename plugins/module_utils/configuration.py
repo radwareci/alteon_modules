@@ -1,5 +1,3 @@
-#!/usr/bin/python
-#
 # Copyright (c) Ansible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -46,7 +44,7 @@ ANSIBLE_TO_SDK_CMD = {
 
 
 def configuration_choice_translation(sdk_choices):
-    choices = list()
+    choices = []
     choices.extend(DEFAULT_STATE)
     for item in sdk_choices:
         if item in EXCLUDE_STATE:
@@ -101,7 +99,7 @@ class ConfigurationModule(BaseAPI):
 
         self.arguments = configurator_class.get_parameters_class()()
         if self._base.params['parameters'] is None:
-            self._base.params['parameters'] = dict()
+            self._base.params['parameters'] = {}
         self.arguments.set_attributes(**self._base.params['parameters'])
         self.result = {}
         self.changed = False
@@ -163,7 +161,7 @@ class ConfigurationModule(BaseAPI):
                 self.changes = conf_mng_result.diff
         except RadwareError as e:
             self._on_error()
-            raise RadwareModuleError(e)
+            raise RadwareModuleError(e) from e
 
         if self.changed:
             self.result.update(dict(changed=self.changed))
@@ -183,5 +181,3 @@ class ConfigurationModule(BaseAPI):
                 else:
                     self.result.update(status=conf_mng_result.content_translate, obj=None)
         return self.result
-
-

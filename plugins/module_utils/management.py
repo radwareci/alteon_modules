@@ -1,5 +1,3 @@
-#!/usr/bin/python
-#
 # Copyright (c) Ansible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -74,8 +72,7 @@ class ManagementModule(BaseAPI):
                 return value
 
         if self._command not in dir(self._mng_instance):
-            raise RadwareModuleError('Management instance: {0} missing function: {1}'.format(self._mng_instance,
-                                                                                             self._command))
+            raise RadwareModuleError(f"Management instance: {self._mng_instance} missing function: {self._command}")
         # try:
         #     self._device_mng.verify_device_accessible(retries=2)
         # except RadwareError as e:
@@ -85,7 +82,7 @@ class ManagementModule(BaseAPI):
             func = getattr(self._mng_instance, self._command)
             if callable(func):
                 annotations = get_type_hints(func)
-                func_args = dict()
+                func_args = {}
                 if annotations:
                     for k in annotations.keys():
                         if k in self._base.params and self._base.params[k] is not None:
@@ -97,7 +94,7 @@ class ManagementModule(BaseAPI):
             else:
                 func_result = func
         except RadwareError as e:
-            raise RadwareModuleError(e)
+            raise RadwareModuleError(e) from e
 
         return dict(status=func_result)
 
@@ -105,4 +102,4 @@ class ManagementModule(BaseAPI):
         for k, v in self._device_mng.__dict__.items():
             if type(v) == mng_class:
                 return v
-        raise RadwareModuleError('unable to find SDK management class {0}'.format(mng_class))
+        raise RadwareModuleError(f"unable to find SDK management class {mng_class}")

@@ -241,7 +241,6 @@ obj:
   description: parameters object type
   returned: changed, read
   type: dict
-#  type: dictionary
 '''
 
 from ansible.module_utils.basic import AnsibleModule

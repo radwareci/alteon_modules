@@ -119,7 +119,7 @@ class AnsibleRadwareParameters(object):
 
 
 def load_params(params):
-    provider = params.get('provider') or dict()
+    provider = params.get('provider') or {}
     for key, value in provider.items():
         if key in radware_provider_spec:
             if params.get(key) is None and value is not None:
@@ -157,21 +157,21 @@ def build_specs_from_annotation(annotations_src_object):
     # type and other attributed are consumed from Parameter object metadata
     # the operation is performed recursively
 
-    specs = dict()
+    specs = {}
     annotations = get_type_hints(annotations_src_object)
     for k, v in annotations.items():
         list_mode = False
-        new_spec_item = dict()
-        annotation_class = get_annotation_class(annotations[k])
-        if is_annotation_type_optional(annotations[k]):
+        new_spec_item = {}
+        annotation_class = get_annotation_class(v)
+        if is_annotation_type_optional(v):
             new_spec_item.update(dict(required=False))
-            if is_optional_type_list(annotations[k]):
+            if is_optional_type_list(v):
                 new_spec_item.update(dict(type='list'))
                 list_mode = True
         else:
             new_spec_item.update(dict(required=True))
 
-        if is_annotation_type_list(annotations[k]):
+        if is_annotation_type_list(v):
             new_spec_item.update(dict(type='list'))
             list_mode = True
 
@@ -193,20 +193,18 @@ def build_specs_from_annotation(annotations_src_object):
             else:
                 if issubclass(annotation_class, BaseBeanEnum):
                     if list_mode:
-                        raise TypeError('ArgumentSpecs: Enum class {0} not allowed with type=list'.format(
-                            annotation_class))
+                        raise TypeError(f"ArgumentSpecs: Enum class {annotation_class} not allowed with type=list")
                     new_spec_item.update(dict(choices=annotation_class.value_names()))
                 elif issubclass(annotation_class, RadwareParametersExtension):
                     if list_mode:
-                        raise TypeError('ArgumentSpecs: RadwareParametersExtension class {0} not allowed with '
-                                        'type=list'.format(annotation_class))
-                    val_options = list()
+                        raise TypeError(f"ArgumentSpecs: RadwareParametersExtension class {annotation_class} not allowed with type=list")
+                    val_options = []
                     for name, val in annotation_class.__dict__.items():
                         if not name.startswith('_'):
                             val_options.append(val)
                     new_spec_item.update(dict(choices=val_options))
                 elif annotation_class != str and annotation_class != PasswordArgument:
-                    raise TypeError('ArgumentSpecs: unsupported argument type {0}'.format(annotation_class))
+                    raise TypeError(f"ArgumentSpecs: unsupported argument type {annotation_class}")
 
         specs.update({k: new_spec_item})
     return specs
@@ -214,5 +212,3 @@ def build_specs_from_annotation(annotations_src_object):
 
 class RadwareModuleError(Exception):
     pass
-
-
