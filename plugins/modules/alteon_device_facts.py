@@ -7,10 +7,6 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'certified'}
-
 DOCUMENTATION = r'''
 module: alteon_device_facts
 short_description: Collect facts from Alteon device
@@ -20,58 +16,6 @@ version_added: 1.0.0
 author:
   - Leon Meguira (@leonmeguira)
 options:
-  provider:
-    description:
-      - Radware Alteon connection details.
-    required: true
-    type: dict
-    suboptions:
-      server:
-        description:
-          - Radware Alteon IP.
-        required: true
-        default: null
-        type: str
-      user:
-        description:
-          - Radware Alteon username.
-        required: true
-        default: null
-        type: str
-      password:
-        description:
-          - Radware Alteon password.
-        required: true
-        default: null
-        type: str
-        aliases:
-        - pass
-        - pwd
-      validate_certs:
-        description:
-          - If C(no), SSL certificates will not be validated.
-          - This should only set to C(no) used on personally controlled sites using self-signed certificates.
-        required: true
-        default: true
-        type: bool
-      https_port:
-        description:
-          - Radware Alteon https port.
-        required: true
-        default: 443
-        type: int
-      ssh_port:
-        description:
-          - Radware Alteon ssh port.
-        required: true
-        default: 22
-        type: int
-      timeout:
-        description:
-          - Timeout for connection.
-        required: true
-        default: 20
-        type: int
   gather_facts:
     description:
       - Facts subsets to collects/ignore.
@@ -258,10 +202,7 @@ options:
     - "!l7_content_class_cookie"
     - content_rule
     - "!content_rule"
-notes:
-  - Requires Radware alteon Python SDK.
-requirements:
-  - Radware alteon Python SDK.
+extends_documentation_fragment: radware.alteon.alteon_options_doc_fragment
 '''
 
 EXAMPLES = r'''

@@ -7,100 +7,15 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['stableinterface'],
-                    'supported_by': 'certified'}
-
 DOCUMENTATION = r'''
 module: alteon_config_l7_content_class
+author:
+  - Michal Greenberg (@michalg)
 short_description: create and manage layer7 content class in Radware Alteon
 description:
   - create and manage layer7 content class in Radware Alteon.
-version_added: '2.9'
-author:
-  - Michal Greenberg (@michalg)
+version_added: '1.0.0'
 options:
-  provider:
-    description:
-      - Radware Alteon connection details.
-    required: true
-    type: dict
-    suboptions:
-      server:
-        description:
-          - Radware Alteon IP address.
-        required: true
-        default: null
-        type: str
-      user:
-        description:
-          - Radware Alteon username.
-        required: true
-        default: null
-        type: str
-      password:
-        description:
-          - Radware Alteon password.
-        required: true
-        default: null
-        type: str
-        aliases:
-        - pass
-        - pwd
-      validate_certs:
-        description:
-          - If C(no), SSL certificates will not be validated.
-          - This should only set to C(no) used on personally controlled sites using self-signed certificates.
-        required: true
-        default: true
-        type: bool
-      https_port:
-        description:
-          - Radware Alteon https port.
-        required: true
-        default: 443
-        type: int
-      ssh_port:
-        description:
-          - Radware Alteon ssh port.
-        required: true
-        default: 22
-        type: int
-      timeout:
-        description:
-          - Timeout for connection.
-        required: true
-        default: 20
-        type: int
-  state:
-    description:
-      - When C(present), guarantees that the object exists with the provided attributes.
-      - When C(absent), when applicable removes the object.
-      - When C(read), when exists read object from configuration to parameter format.
-      - When C(overwrite), removes the object if exists then recreate it. This state can be used only before applying the entry.
-        If the entry was already applied you must delete, apply and recreate the entry.
-      - When C(append), append object configuration with the provided parameters
-    required: true
-    default: null
-    type: str
-    choices:
-    - present
-    - absent
-    - read
-    - overwrite
-    - append
-  revert_on_error:
-    description:
-      - If an error occurs, perform revert on alteon.
-    required: false
-    default: false
-    type: bool
-  write_on_change:
-    description:
-      - Executes Alteon write calls only when an actual change has been evaluated.
-    required: false
-    default: false
-    type: bool
   parameters:
     description:
       - Parameters for layer7 content class configuration.
@@ -206,11 +121,10 @@ options:
         choices:
         - "yes"
         - "no"
-notes:
-  - Requires the Radware alteon-sdk Python package on the host. This is as easy as
-      C(pip3 install alteon-sdk)
-requirements:
-  - alteon-sdk
+extends_documentation_fragment:
+  - radware.alteon.alteon_options_doc_fragment
+  - radware.alteon.alteon_options_doc_fragment.other
+  - radware.alteon.alteon_options_doc_fragment.state_type2
 '''
 
 EXAMPLES = r'''
