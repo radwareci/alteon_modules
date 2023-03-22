@@ -8,6 +8,7 @@ from abc import abstractmethod
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.radware.alteon.plugins.module_utils.common import BaseAPI, RadwareModuleError, build_specs_from_annotation, \
     get_type_hints, get_annotation_class
+from ansible_collections.radware.alteon.plugins.module_utils.common import ANSIBLE_METADATA
 try:
     from radware.sdk.exceptions import RadwareError
     from radware.sdk.management import DeviceManagement
@@ -16,10 +17,6 @@ except ModuleNotFoundError:
     AnsibleModule(argument_spec={}, check_invalid_arguments=False).fail_json(
         msg="The radware-sdk-common package is required")
 
-
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['stableinterface'],
-                    'supported_by': 'certified'}
 
 DOCUMENTATION = r'''
 module: Device Management module
@@ -84,11 +81,11 @@ class ManagementModule(BaseAPI):
                 annotations = get_type_hints(func)
                 func_args = {}
                 if annotations:
-                    for k in annotations.keys():
+                    for k, v in annotations.items():
                         if k in self._base.params and self._base.params[k] is not None:
-                            func_args.update({k: translate(self._base.params[k], get_annotation_class(annotations[k]))})
+                            func_args.update({k: translate(self._base.params[k], get_annotation_class(v))})
                         elif k in kw and kw[k] is not None:
-                            func_args.update({k: translate(kw[k], get_annotation_class(annotations[k]))})
+                            func_args.update({k: translate(kw[k], get_annotation_class(v))})
 
                 func_result = func(**func_args)
             else:
