@@ -8,6 +8,8 @@ from abc import abstractmethod
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.radware.alteon.plugins.module_utils.common import BaseAPI, RadwareModuleError, radware_server_argument_spec, \
     build_specs_from_annotation
+from ansible_collections.radware.alteon.plugins.module_utils.common import ANSIBLE_METADATA
+
 try:
     from radware.sdk.api import BaseDeviceConnection
     from radware.sdk.exceptions import RadwareError
@@ -17,10 +19,6 @@ except ModuleNotFoundError:
     AnsibleModule(argument_spec={}, check_invalid_arguments=False).fail_json(
         msg="The radware-sdk-common package is required")
 
-
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['stableinterface'],
-                    'supported_by': 'certified'}
 
 DOCUMENTATION = r'''
 module: Device Configurator module
