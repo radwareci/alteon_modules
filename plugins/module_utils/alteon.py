@@ -6,7 +6,7 @@ __metaclass__ = type
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.radware.alteon.plugins.module_utils.configuration import ConfigurationArgumentSpec, ConfigurationModule
-from ansible_collections.radware.alteon.plugins.module_utils.common import RadwareBaseModule, radware_server_argument_spec, ANSIBLE_METADATA
+from ansible_collections.radware.alteon.plugins.module_utils.common import RadwareBaseModule, radware_server_argument_spec
 from ansible_collections.radware.alteon.plugins.module_utils.management import ManagementArgumentSpec, ManagementFunctionArgumentSpec, \
     ManagementModule
 try:
@@ -18,6 +18,10 @@ except ModuleNotFoundError:
     AnsibleModule(argument_spec={}, check_invalid_arguments=False).fail_json(
         msg="The alteon-sdk package is required")
 
+
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['stableinterface'],
+                    'supported_by': 'certified'}
 
 DOCUMENTATION = r'''
 module: Alteon Management and Configuration module
