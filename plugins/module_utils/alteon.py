@@ -6,18 +6,16 @@ __metaclass__ = type
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.radware.alteon.plugins.module_utils.configuration import ConfigurationArgumentSpec, ConfigurationModule
-from ansible_collections.radware.alteon.plugins.module_utils.common import RadwareBaseModule, radware_server_argument_spec, ANSIBLE_METADATA
+from ansible_collections.radware.alteon.plugins.module_utils.common import RadwareBaseModule, radware_server_argument_spec
 from ansible_collections.radware.alteon.plugins.module_utils.management import ManagementArgumentSpec, ManagementFunctionArgumentSpec, \
     ManagementModule
 try:
     from radware.alteon.api.mgmt import AlteonManagement
     from radware.alteon.api import AlteonDeviceConnection
-    from radware.sdk.exceptions import RadwareError
     from radware.alteon import __minimum_supported_version__
 except ModuleNotFoundError:
-    AnsibleModule(argument_spec={}, check_invalid_arguments=False).fail_json(
-        msg="The alteon-sdk package is required")
-
+    if __name__ == '__main__':
+        AnsibleModule(argument_spec={}, check_invalid_arguments=False).fail_json(msg="The alteon-sdk package is required")
 
 DOCUMENTATION = r'''
 module: Alteon Management and Configuration module
@@ -27,13 +25,7 @@ author:
 
 
 def fail_on_pending_arg_spec(argument_spec: dict):
-    fail_on_pending_cfg_spec = dict(
-        fail_on_pending_cfg=dict(
-            required=False,
-            type='bool',
-            default=False
-        )
-    )
+    fail_on_pending_cfg_spec = {"fail_on_pending_cfg": {"required": False, "type": 'bool', "default": False}}
     argument_spec.update(fail_on_pending_cfg_spec)
 
 
@@ -51,12 +43,7 @@ class AlteonManagementFunctionArgumentSpec(ManagementFunctionArgumentSpec):
         if additional_functions:
             for func in additional_functions:
                 command_names.append(func.__name__)
-            argument_spec = dict(
-                command=dict(
-                    required=True,
-                    choices=command_names
-                )
-            )
+            argument_spec = {"command": {"required": True, "choices": command_names}}
             self.argument_spec.update(argument_spec)
         self.argument_spec.update(radware_server_argument_spec)
 
@@ -65,13 +52,7 @@ class AlteonConfigurationArgumentSpec(ConfigurationArgumentSpec):
 
     def __init__(self, config_class):
         super().__init__(config_class)
-        additional_argument_spec = dict(
-            revert_on_error=dict(
-                required=False,
-                type='bool',
-                default=False
-            )
-        )
+        additional_argument_spec = {"revert_on_error": {"required": False, "type": 'bool', "default": False}}
         self.argument_spec.update(additional_argument_spec)
 
 
@@ -82,7 +63,7 @@ class AlteonAnsibleModule(RadwareBaseModule):
         self._mng = AlteonManagement(self._connection)
 
     def module_warn_alteon_version(self):
-        self.module.warn(f"please verify your alteon is running a version >= {__minimum_supported_version__}")
+        self.module.warn(f'please verify your alteon is running a version >= {__minimum_supported_version__}')
 
 
 class AlteonManagementModule(AlteonAnsibleModule, ManagementModule):

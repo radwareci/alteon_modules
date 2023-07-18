@@ -43,25 +43,25 @@ class ModuleDocFragment(object):
               - If C(no), SSL certificates will not be validated.
               - This should only set to C(no) used on personally controlled sites using self-signed certificates.
             required: true
-            default: true
+            default: null
             type: bool
           https_port:
             description:
               - Radware Alteon https port.
             required: true
-            default: 443
+            default: null
             type: int
           ssh_port:
             description:
               - Radware Alteon ssh port.
             required: true
-            default: 22
+            default: null
             type: int
           timeout:
             description:
               - Timeout for connection.
             required: true
-            default: 20
+            default: null
             type: int
     notes:
     - Requires the Radware alteon-sdk Python package on the host. This is as easy as

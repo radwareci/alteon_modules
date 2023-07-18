@@ -26,6 +26,7 @@ options:
       - for more details about certain choice , please refer to the approriate module
     required: True
     default: null
+    elements: str
     type: list
     choices:
     - all
@@ -450,26 +451,209 @@ result:
 
 from ansible.module_utils.basic import AnsibleModule
 import traceback
-from typing import get_type_hints
 from ansible_collections.radware.alteon.plugins.module_utils.common import RadwareModuleError, radware_server_argument_spec
 from ansible_collections.radware.alteon.plugins.module_utils.alteon import AlteonAnsibleModule
-from radware.sdk.exceptions import RadwareError
-from radware.alteon.api.mgmt import AlteonManagement
-from radware.alteon.api.config import AlteonConfigurators
-from radware.sdk.configurator import DeviceConfigurator, DeviceConfigurationManager
-from radware.alteon.sdk.configurators.ssl_key import SSLKeyConfigurator
-from radware.alteon.sdk.configurators.ssl_cert import SSLCertConfigurator
-from radware.alteon.sdk.configurators.system_vx_peer_syncronization import VXPeerSyncConfigurator
-from radware.alteon.sdk.configurators.vadc_instance import VADCInstanceConfigurator
-from radware.alteon.sdk.configurators.spanning_tree import SpanningTreeConfigurator
-from radware.alteon.sdk.configurators.l2_lldp import LLDPConfigurator
-from radware.alteon.sdk.configurators.system_time_date import SystemTimeDateConfigurator
-from radware.alteon.sdk.configurators.lacp_aggregation import LACPAggregationConfigurator
-from radware.alteon.sdk.configurators.system_dns_client import SystemDNSClientConfigurator
-from radware.alteon.sdk.configurators.l3_bootp_relay import BOOTPRelayConfigurator
-from radware.alteon.sdk.configurators.ha_configuration_sync import ConfigurationSyncConfigurator
-from radware.alteon.sdk.configurators.high_availability import HighAvailabilityConfigurator
-from radware.alteon.sdk.configurators.global_traffic_redirection import GlobalRedirectionConfigurator
+try:
+    from typing import get_type_hints
+    from radware.sdk.exceptions import RadwareError
+    from radware.alteon.api.mgmt import AlteonManagement
+    from radware.alteon.api.config import AlteonConfigurators
+    from radware.sdk.configurator import DeviceConfigurator, DeviceConfigurationManager
+    from radware.alteon.sdk.configurators.ssl_key import SSLKeyConfigurator
+    from radware.alteon.sdk.configurators.ssl_cert import SSLCertConfigurator
+    from radware.alteon.sdk.configurators.system_vx_peer_syncronization import VXPeerSyncConfigurator
+    from radware.alteon.sdk.configurators.vadc_instance import VADCInstanceConfigurator
+    from radware.alteon.sdk.configurators.spanning_tree import SpanningTreeConfigurator
+    from radware.alteon.sdk.configurators.l2_lldp import LLDPConfigurator
+    from radware.alteon.sdk.configurators.system_time_date import SystemTimeDateConfigurator
+    from radware.alteon.sdk.configurators.lacp_aggregation import LACPAggregationConfigurator
+    from radware.alteon.sdk.configurators.system_dns_client import SystemDNSClientConfigurator
+    from radware.alteon.sdk.configurators.l3_bootp_relay import BOOTPRelayConfigurator
+    from radware.alteon.sdk.configurators.ha_configuration_sync import ConfigurationSyncConfigurator
+    from radware.alteon.sdk.configurators.high_availability import HighAvailabilityConfigurator
+    from radware.alteon.sdk.configurators.global_traffic_redirection import GlobalRedirectionConfigurator
+except ModuleNotFoundError:
+    if __name__ == '__main__':
+        module_args = {"gather_facts": {"required": True, "type": "list", "elements": "str", "choices": [
+                                                                                                        ['all'],
+                                                                                                        ['!all'],
+                                                                                                        ['system_info'],
+                                                                                                        ['!system_info'],
+                                                                                                        ['system_times'],
+                                                                                                        ['!system_times'],
+                                                                                                        ['system_capacity'],
+                                                                                                        ['!system_capacity'],
+                                                                                                        ['adc_software_images'],
+                                                                                                        ['!adc_software_images'],
+                                                                                                        ['vx_software_images'],
+                                                                                                        ['!vx_software_images'],
+                                                                                                        ['appshape'],
+                                                                                                        ['!appshape'],
+                                                                                                        ['gslb_network'],
+                                                                                                        ['!gslb_network'],
+                                                                                                        ['gslb_rule'],
+                                                                                                        ['!gslb_rule'],
+                                                                                                        ['hc_http'],
+                                                                                                        ['!hc_http'],
+                                                                                                        ['hc_logexp'],
+                                                                                                        ['!hc_logexp'],
+                                                                                                        ['hc_tcp'],
+                                                                                                        ['!hc_tcp'],
+                                                                                                        ['server'],
+                                                                                                        ['!server'],
+                                                                                                        ['server_state'],
+                                                                                                        ['!server_state'],
+                                                                                                        ['server_group'],
+                                                                                                        ['!server_group'],
+                                                                                                        ['ssl_cert'],
+                                                                                                        ['!ssl_cert'],
+                                                                                                        ['ssl_client_auth_policy'],
+                                                                                                        ['!ssl_client_auth_policy'],
+                                                                                                        ['ssl_key'],
+                                                                                                        ['!ssl_key'],
+                                                                                                        ['ssl_policy'],
+                                                                                                        ['!ssl_policy'],
+                                                                                                        ['ssl_server_auth_policy'],
+                                                                                                        ['!ssl_server_auth_policy'],
+                                                                                                        ['vadc_instance'],
+                                                                                                        ['!vadc_instance'],
+                                                                                                        ['vadc_instance_state'],
+                                                                                                        ['!vadc_instance_state'],
+                                                                                                        ['virtual_server'],
+                                                                                                        ['!virtual_server'],
+                                                                                                        ['virtual_service'],
+                                                                                                        ['!virtual_service'],
+                                                                                                        ['virtual_service_state'],
+                                                                                                        ['!virtual_service_state'],
+                                                                                                        ['l2_vlan'],
+                                                                                                        ['!l2_vlan'],
+                                                                                                        ['sys_local_user'],
+                                                                                                        ['!sys_local_user'],
+                                                                                                        ['sys_management_access'],
+                                                                                                        ['!sys_management_access'],
+                                                                                                        ['sys_predefined_local_users'],
+                                                                                                        ['!sys_predefined_local_users'],
+                                                                                                        ['sys_radius_auth'],
+                                                                                                        ['!sys_radius_auth'],
+                                                                                                        ['sys_tacacs_auth'],
+                                                                                                        ['!sys_tacacs_auth'],
+                                                                                                        ['sys_snmp'],
+                                                                                                        ['!sys_snmp'],
+                                                                                                        ['sys_logging'],
+                                                                                                        ['!sys_logging'],
+                                                                                                        ['sys_vx_peer_sync'],
+                                                                                                        ['!sys_vx_peer_sync'],
+                                                                                                        ['sys_alerts'],
+                                                                                                        ['!sys_alerts'],
+                                                                                                        ['sys_dns_client'],
+                                                                                                        ['!sys_dns_client'],
+                                                                                                        ['sys_time_date'],
+                                                                                                        ['!sys_time_date'],
+                                                                                                        ['physical_port'],
+                                                                                                        ['!physical_port'],
+                                                                                                        ['physical_port_state'],
+                                                                                                        ['!physical_port_state'],
+                                                                                                        ['physical_port_stats'],
+                                                                                                        ['!physical_port_stats'],
+                                                                                                        ['lacp_aggregation'],
+                                                                                                        ['!lacp_aggregation'],
+                                                                                                        ['lacp_aggregation_state'],
+                                                                                                        ['!lacp_aggregation_state'],
+                                                                                                        ['spanning_tree'],
+                                                                                                        ['!spanning_tree'],
+                                                                                                        ['l2_lldp'],
+                                                                                                        ['!l2_lldp'],
+                                                                                                        ['l3_interface'],
+                                                                                                        ['!l3_interface'],
+                                                                                                        ['l3_interface_state'],
+                                                                                                        ['!l3_interface_state'],
+                                                                                                        ['l3_gateway'],
+                                                                                                        ['!l3_gateway'],
+                                                                                                        ['l3_gateway_state'],
+                                                                                                        ['!l3_gateway_state'],
+                                                                                                        ['l3_bootp_relay'],
+                                                                                                        ['!l3_bootp_relay'],
+                                                                                                        ['l3_static_routes'],
+                                                                                                        ['!l3_static_routes'],
+                                                                                                        ['ha_floating_ip'],
+                                                                                                        ['!ha_floating_ip'],
+                                                                                                        ['ha_config_sync'],
+                                                                                                        ['!ha_config_sync'],
+                                                                                                        ['high_availability'],
+                                                                                                        ['!high_availability'],
+                                                                                                        ['global_redirection'],
+                                                                                                        ['!global_redirection'],
+                                                                                                        ['global_redirection_state'],
+                                                                                                        ['!global_redirection_state'],
+                                                                                                        ['fdn_server'],
+                                                                                                        ['!fdn_server'],
+                                                                                                        ['network_class_ip'],
+                                                                                                        ['!network_class_ip'],
+                                                                                                        ['network_class_region'],
+                                                                                                        ['!network_class_region'],
+                                                                                                        ['dns_responders'],
+                                                                                                        ['!dns_responders'],
+                                                                                                        ['ssl_cert_group'],
+                                                                                                        ['!ssl_cert_group'],
+                                                                                                        ['slb_pip'],
+                                                                                                        ['!slb_pip'],
+                                                                                                        ['slb_pip6'],
+                                                                                                        ['!slb_pip6'],
+                                                                                                        ['ha_service'],
+                                                                                                        ['!ha_service'],
+                                                                                                        ['snmpv3_target_params'],
+                                                                                                        ['!snmpv3_target_params'],
+                                                                                                        ['snmpv3_target_addr_new_cfg'],
+                                                                                                        ['!snmpv3_target_addr_new_cfg'],
+                                                                                                        ['bgp_global'],
+                                                                                                        ['!bgp_global'],
+                                                                                                        ['bgp_peer'],
+                                                                                                        ['!bgp_peer'],
+                                                                                                        ['group_real_server'],
+                                                                                                        ['!group_real_server'],
+                                                                                                        ['bgp_aggr'],
+                                                                                                        ['!bgp_aggr'],
+                                                                                                        ['alteon_cli_command'],
+                                                                                                        ['!alteon_cli_command'],
+                                                                                                        ['snmpv3_usm_user'],
+                                                                                                        ['!snmpv3_usm_user'],
+                                                                                                        ['snmpv3_group'],
+                                                                                                        ['!snmpv3_group'],
+                                                                                                        ['snmpv3_community'],
+                                                                                                        ['!snmpv3_community'],
+                                                                                                        ['snmpv3_view_tree_family'],
+                                                                                                        ['!snmpv3_view_tree_family'],
+                                                                                                        ['snmpv3_notify'],
+                                                                                                        ['!snmpv3_notify'],
+                                                                                                        ['snmp_general'],
+                                                                                                        ['!snmp_general'],
+                                                                                                        ['gel'],
+                                                                                                        ['!gel'],
+                                                                                                        ['slb_port'],
+                                                                                                        ['!slb_port'],
+                                                                                                        ['snmpv3_access'],
+                                                                                                        ['!snmpv3_access'],
+                                                                                                        ['l7_content_class'],
+                                                                                                        ['!l7_content_class'],
+                                                                                                        ['l7_content_class_hostname'],
+                                                                                                        ['!l7_content_class_hostname'],
+                                                                                                        ['l7_content_class_path'],
+                                                                                                        ['!l7_content_class_path'],
+                                                                                                        ['l7_content_class_filename'],
+                                                                                                        ['!l7_content_class_filename'],
+                                                                                                        ['l7_content_class_filetype'],
+                                                                                                        ['!l7_content_class_filetype'],
+                                                                                                        ['l7_content_class_header'],
+                                                                                                        ['!l7_content_class_header'],
+                                                                                                        ['l7_content_class_cookie'],
+                                                                                                        ['!l7_content_class_cookie'],
+                                                                                                        ['content_rule'],
+                                                                                                        ['!content_rule']]
+                                        },
+                       'provider': {'type': 'dict', 'required': True}
+                       }
+        module = AnsibleModule(argument_spec=module_args, check_invalid_arguments=False, supports_check_mode=True)
+        module.fail_json(msg="The alteon-sdk package is required")
 
 STATE_BEANS_VAR_NAME = 'state_beans'
 STATS_BEANS_VAR_NAME = 'stats_beans'
@@ -489,14 +673,7 @@ VX_SOFTWARE_FACTS = 'vx_software_images'
 class ArgumentSpecs(object):
     def __init__(self):
         self.supports_check_mode = False
-        self.argument_spec = dict(
-            gather_facts=dict(
-                required=True,
-                type='list',
-                elements='str',
-                choices=self._subset()
-            )
-        )
+        self.argument_spec = {"gather_facts": {"required": True, "type": "list", "elements": "str", "choices": self._subset()}}
         self.argument_spec.update(radware_server_argument_spec)
 
     def _subset(self):
@@ -568,7 +745,7 @@ class ModuleManager(AlteonAnsibleModule):
         except RadwareError as e:
             raise RadwareModuleError(e) from e
 
-        return dict(facts_obj=result)
+        return {"facts_obj": result}
 
     def collect_mng_facts(self, facts_list, exclude_list):
         result = {}

@@ -6,16 +6,14 @@ __metaclass__ = type
 
 from abc import abstractmethod
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.radware.alteon.plugins.module_utils.common import BaseAPI, RadwareModuleError, build_specs_from_annotation, \
-    get_type_hints, get_annotation_class
-from ansible_collections.radware.alteon.plugins.module_utils.common import ANSIBLE_METADATA
+from ansible_collections.radware.alteon.plugins.module_utils.common import BaseAPI, RadwareModuleError, build_specs_from_annotation
 try:
     from radware.sdk.exceptions import RadwareError
-    from radware.sdk.management import DeviceManagement
     from radware.sdk.beans_common import BaseBeanEnum
+    from radware.sdk.common import get_type_hints, get_annotation_class
 except ModuleNotFoundError:
-    AnsibleModule(argument_spec={}, check_invalid_arguments=False).fail_json(
-        msg="The radware-sdk-common package is required")
+    if __name__ == '__main__':
+        AnsibleModule(argument_spec={}, check_invalid_arguments=False).fail_json(msg="The alteon-sdk package is required")
 
 
 DOCUMENTATION = r'''
@@ -28,12 +26,7 @@ author:
 class ManagementArgumentSpec(object):
     def __init__(self, mng_class):
         self.supports_check_mode = False
-        command_spec = dict(
-            command=dict(
-                required=True,
-                choices=mng_class.api_function_names()
-            )
-        )
+        command_spec = {"command": {"required": True, "choices": mng_class.api_function_names()}}
         self.argument_spec = {}
         self.argument_spec.update(command_spec)
 
@@ -69,7 +62,7 @@ class ManagementModule(BaseAPI):
                 return value
 
         if self._command not in dir(self._mng_instance):
-            raise RadwareModuleError(f"Management instance: {self._mng_instance} missing function: {self._command}")
+            raise RadwareModuleError(f'Management instance: {self._mng_instance} missing function: {self._command}')
         # try:
         #     self._device_mng.verify_device_accessible(retries=2)
         # except RadwareError as e:
@@ -80,12 +73,13 @@ class ManagementModule(BaseAPI):
             if callable(func):
                 annotations = get_type_hints(func)
                 func_args = {}
+
                 if annotations:
-                    for k, v in annotations.items():
+                    for k, in annotations.items():
                         if k in self._base.params and self._base.params[k] is not None:
-                            func_args.update({k: translate(self._base.params[k], get_annotation_class(v))})
+                            func_args.update({k: translate(self._base.params[k], get_annotation_class(annotations[k]))})
                         elif k in kw and kw[k] is not None:
-                            func_args.update({k: translate(kw[k], get_annotation_class(v))})
+                            func_args.update({k: translate(kw[k], get_annotation_class(annotations[k]))})
 
                 func_result = func(**func_args)
             else:
@@ -93,10 +87,11 @@ class ManagementModule(BaseAPI):
         except RadwareError as e:
             raise RadwareModuleError(e) from e
 
-        return dict(status=func_result)
+        # return dict(status=func_result)
+        return {"status": func_result}
 
     def _get_mng_class_instance(self, mng_class):
         for k, v in self._device_mng.__dict__.items():
             if type(v) == mng_class:
                 return v
-        raise RadwareModuleError(f"unable to find SDK management class {mng_class}")
+        raise RadwareModuleError(f'unable to find SDK management class {mng_class}')

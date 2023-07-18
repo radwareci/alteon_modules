@@ -124,7 +124,7 @@ options:
 extends_documentation_fragment:
   - radware.alteon.alteon_options_doc_fragment
   - radware.alteon.alteon_options_doc_fragment.other
-  - radware.alteon.alteon_options_doc_fragment.state_type2
+  - radware.alteon.alteon_options_doc_fragment.state_type1
 '''
 
 EXAMPLES = r'''
@@ -159,12 +159,21 @@ obj:
 
 from ansible.module_utils.basic import AnsibleModule
 import traceback
-import logging
-
 from ansible_collections.radware.alteon.plugins.module_utils.common import RadwareModuleError
 from ansible_collections.radware.alteon.plugins.module_utils.alteon import AlteonConfigurationModule, \
     AlteonConfigurationArgumentSpec as ArgumentSpec
-from radware.alteon.sdk.configurators.l7_content_class import L7ContentClassConfigurator
+try:
+    from radware.alteon.sdk.configurators.l7_content_class import L7ContentClassConfigurator
+except ModuleNotFoundError:
+    if __name__ == '__main__':
+        module_args = {'parameters': {'type': 'dict', 'required': False},
+                       'provider': {'type': 'dict', 'required': True},
+                       'revert_on_error': {'required': False, 'type': 'bool', 'default': False},
+                       'write_on_change': {'required': False, 'type': 'bool', 'default': False},
+                       'state': {'required': True, 'choices': ['present', 'absent', 'read', 'overwrite', 'append']}
+                       }
+        module = AnsibleModule(argument_spec=module_args, check_invalid_arguments=False)
+        module.fail_json(msg="The alteon-sdk package is required")
 
 
 class ModuleManager(AlteonConfigurationModule):

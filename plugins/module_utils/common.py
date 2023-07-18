@@ -1,3 +1,6 @@
+# Copyright (c) Ansible Project
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
@@ -9,11 +12,9 @@ try:
         PasswordArgument, get_annotation_class, is_annotation_type_optional, is_annotation_type_list, \
         is_optional_type_list, get_type_hints
     from radware.sdk.beans_common import BaseBeanEnum
-    from radware.sdk.api import BaseDeviceConnection
-    from radware.sdk.management import DeviceManagement
 except ModuleNotFoundError:
-    AnsibleModule(argument_spec={}, check_invalid_arguments=False).fail_json(
-        msg="The radware-sdk-common package is required")
+    if __name__ == '__main__':
+        AnsibleModule(argument_spec={}).fail_json(msg="The radware-sdk-common package is required")
 
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
@@ -27,56 +28,48 @@ author:
 '''
 
 https_server_spec = {
-    'https_port': dict(
-        required=False,
-        type='int',
-        fallback=(env_fallback, ['RADWARE_HTTPS_PORT']),
-        default=443
-    ),
-    'validate_certs': dict(
-        required=False,
-        type='bool',
-        fallback=(env_fallback, ['RADWARE_VALIDATE_CERTS']),
-        default=True
-    ),
+    'https_port': {
+        "required": False,
+        "type": 'int',
+        "fallback": (env_fallback, ['RADWARE_HTTPS_PORT']),
+        "default": 443},
+    'validate_certs': {
+        "required": False,
+        "type": 'bool',
+        "fallback": (env_fallback, ['RADWARE_VALIDATE_CERTS']),
+        "default": True},
 }
 
 ssh_server_spec = {
-    'ssh_port': dict(
-        required=False,
-        type='int',
-        fallback=(env_fallback, ['RADWARE_SSH_PORT']),
-        default=22
-    )
+    'ssh_port': {
+        "required": False,
+        "type": 'int',
+        "fallback": (env_fallback, ['RADWARE_SSH_PORT']),
+        "default": 22}
 }
 
 radware_provider_spec = {
-    'server': dict(
-        required=True,
-        fallback=(env_fallback, ['RADWARE_SERVERS'])
-    ),
-    'timeout': dict(
-        required=False,
-        type='int',
-        fallback=(env_fallback, ['RADWARE_TIMEOUT']),
-        default=20
-    ),
-    'user': dict(
-        required=True,
-        fallback=(env_fallback, ['RADWARE_USER'])
-    ),
-    'password': dict(
-        required=True,
-        no_log=True,
-        aliases=['pass', 'pwd'],
-        fallback=(env_fallback, ['RADWARE_PASSWORD'])
-    ),
+    'server': {
+        "required": True,
+        "fallback": (env_fallback, ['RADWARE_SERVERS'])},
+    'timeout': {
+        "required": False,
+        "type": 'int',
+        "fallback": (env_fallback, ['RADWARE_TIMEOUT']),
+        "default": 20},
+    'user': {
+        "required": True,
+        "fallback": (env_fallback, ['RADWARE_USER'])},
+    'password': {
+        "required": True,
+        "no_log": True,
+        "aliases": ['pass', 'pwd'],
+        "fallback": (env_fallback, ['RADWARE_PASSWORD'])}
 }
 
 radware_vdirect_workflow_provider = {
-    'workflow': dict(
-        required=False
-    )
+    'workflow': {
+        "required": False}
 }
 
 radware_server_spec = {}
@@ -90,22 +83,22 @@ radware_vdirect_workflow_spec.update(radware_vdirect_workflow_provider)
 radware_vdirect_workflow_spec.update(https_server_spec)
 
 workflow_argument_spec = {
-    'workflow': dict(
-        required=False),
-    'action': dict(
-        required=False)
+    'workflow': {
+        "required": False},
+    'action': {
+        "required": False}
 }
 
 radware_server_argument_spec = {
-    'provider': dict(
-        type='dict',
-        options=radware_server_spec)
+    'provider': {
+        "type": 'dict',
+        "options": radware_server_spec}
 }
 
 radware_vdirect_argument_spec = {
-    'provider': dict(
-        type='dict',
-        options=radware_vdirect_workflow_spec)
+    'provider': {
+        "type": 'dict',
+        "options": radware_vdirect_workflow_spec}
 }
 
 
@@ -138,17 +131,17 @@ class BaseAPI(object):
 
     @property
     @abstractmethod
-    def _base(self) -> RadwareBaseModule:
+    def _base(self):
         pass
 
     @property
     @abstractmethod
-    def _device_connection(self) -> BaseDeviceConnection:
+    def _device_connection(self):
         pass
 
     @property
     @abstractmethod
-    def _device_mng(self) -> DeviceManagement:
+    def _device_mng(self):
         pass
 
 
@@ -164,47 +157,46 @@ def build_specs_from_annotation(annotations_src_object):
         new_spec_item = {}
         annotation_class = get_annotation_class(v)
         if is_annotation_type_optional(v):
-            new_spec_item.update(dict(required=False))
+            new_spec_item.update({"required": False})
             if is_optional_type_list(v):
-                new_spec_item.update(dict(type='list'))
+                new_spec_item.update({"type": 'list'})
                 list_mode = True
         else:
-            new_spec_item.update(dict(required=True))
+            new_spec_item.update({"required": True})
 
         if is_annotation_type_list(v):
-            new_spec_item.update(dict(type='list'))
+            new_spec_item.update({"type": 'list'})
             list_mode = True
 
         if issubclass(annotation_class, RadwareParametersStruct):
             if list_mode:
-                new_spec_item.update(dict(elements='dict'))
+                new_spec_item.update({"elements": 'dict'})
             else:
-                new_spec_item.update(dict(type='dict'))
-            new_spec_item.update(dict(options=build_specs_from_annotation(
-                annotation_class)))
+                new_spec_item.update({"type": 'dict'})
+            new_spec_item.update({"options": build_specs_from_annotation(annotation_class)})
         else:
             if annotation_class == PasswordArgument:
-                new_spec_item.update(dict(no_log=True))
+                new_spec_item.update({"no_log": True})
             if annotation_class == int or annotation_class == bool:
                 if list_mode:
-                    new_spec_item.update(dict(elements=annotation_class.__name__))
+                    new_spec_item.update({"elements": annotation_class.__name__})
                 else:
-                    new_spec_item.update(dict(type=annotation_class.__name__))
+                    new_spec_item.update({"type": annotation_class.__name__})
             else:
                 if issubclass(annotation_class, BaseBeanEnum):
                     if list_mode:
-                        raise TypeError(f"ArgumentSpecs: Enum class {annotation_class} not allowed with type=list")
-                    new_spec_item.update(dict(choices=annotation_class.value_names()))
+                        raise TypeError(f'ArgumentSpecs: Enum class {annotation_class} not allowed with type=list')
+                    new_spec_item.update({"choices": annotation_class.value_names()})
                 elif issubclass(annotation_class, RadwareParametersExtension):
                     if list_mode:
-                        raise TypeError(f"ArgumentSpecs: RadwareParametersExtension class {annotation_class} not allowed with type=list")
+                        raise TypeError(f'ArgumentSpecs: RadwareParametersExtension class {annotation_class} not allowed with type=list')
                     val_options = []
                     for name, val in annotation_class.__dict__.items():
                         if not name.startswith('_'):
                             val_options.append(val)
-                    new_spec_item.update(dict(choices=val_options))
+                    new_spec_item.update({"choices": val_options})
                 elif annotation_class != str and annotation_class != PasswordArgument:
-                    raise TypeError(f"ArgumentSpecs: unsupported argument type {annotation_class}")
+                    raise TypeError(f'ArgumentSpecs: unsupported argument type {annotation_class}')
 
         specs.update({k: new_spec_item})
     return specs

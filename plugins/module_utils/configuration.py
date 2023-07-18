@@ -8,16 +8,12 @@ from abc import abstractmethod
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.radware.alteon.plugins.module_utils.common import BaseAPI, RadwareModuleError, radware_server_argument_spec, \
     build_specs_from_annotation
-from ansible_collections.radware.alteon.plugins.module_utils.common import ANSIBLE_METADATA
-
 try:
-    from radware.sdk.api import BaseDeviceConnection
     from radware.sdk.exceptions import RadwareError
-    from radware.sdk.management import DeviceManagement
-    from radware.sdk.configurator import DeviceConfigurationManager, ConfigManagerResult, MSG_NO_CHANGE
+    from radware.sdk.configurator import DeviceConfigurationManager, MSG_NO_CHANGE
 except ModuleNotFoundError:
-    AnsibleModule(argument_spec={}, check_invalid_arguments=False).fail_json(
-        msg="The radware-sdk-common package is required")
+    if __name__ == '__main__':
+        AnsibleModule(argument_spec={}, check_invalid_arguments=False).fail_json(msg="The alteon-sdk package is required")
 
 
 DOCUMENTATION = r'''
@@ -58,22 +54,9 @@ def configuration_choice_translation(sdk_choices):
 class ConfigurationArgumentSpec(object):
     def __init__(self, config_class):
         self.supports_check_mode = True
-        argument_spec = dict(
-            parameters=dict(
-                required=False,
-                type='dict',
-                options=build_specs_from_annotation(config_class.get_parameters_class())
-            ),
-            state=dict(
-                required=True,
-                choices=configuration_choice_translation(config_class.api_function_names())
-            ),
-            write_on_change=dict(
-                required=False,
-                type='bool',
-                default=False
-            )
-        )
+        argument_spec = {"parameters": {"required": False, "type": "dict", "options": build_specs_from_annotation(config_class.get_parameters_class())},
+                         "state": {"required": True, "choices": configuration_choice_translation(config_class.api_function_names())},
+                         "write_on_change": {"required": False, "type": "bool", "default": False}}
         self.argument_spec = {}
         self.argument_spec.update(radware_server_argument_spec)
         self.argument_spec.update(argument_spec)
@@ -162,9 +145,9 @@ class ConfigurationModule(BaseAPI):
             raise RadwareModuleError(e) from e
 
         if self.changed:
-            self.result.update(dict(changed=self.changed))
+            self.result.update({"changed": self.changed})
             if self._report_diff:
-                self.result.update(dict(diff=self.changes))
+                self.result.update({"diff": self.changes})
             self.result.update(status=conf_mng_result.content_translate, obj=prepare_object())
         else:
             if self._state in ANSIBLE_TO_SDK_CMD:
