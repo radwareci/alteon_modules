@@ -3,9 +3,11 @@
 # alteon_modules
 The alteon_modules project provides an Ansible collection for managing and automating your Radware devices. It consists of a set of modules and roles for performing tasks related to Radware devices configuration.
 
+<b>Note</b>: This Collection is not currently intended to replace the existing <a href="https://galaxy.ansible.com/radware/radware_modules">radware_modules</a> collection.
+
 ## Requirements
-- Ansible >= 2.9
-- Python >= 3.6
+- Ansible >= 2.14
+- Python >= 3.9
 - alteon-sdk python package
 
 ## Installation
