@@ -1,6 +1,6 @@
-name: CI
+name: CI sanity tests & deploy to galaxy
 on:
-  # Run CI against all pushes (direct commits, also merged PRs), Pull Requests
+  # Run CI against all pushes to master
   push:
     branches:
       - main
@@ -75,3 +75,16 @@ jobs:
           # which should improve CI performance. See limitations on
           # https://github.com/ansible-community/ansible-test-gh-action#pull-request-change-detection
           pull-request-change-detection: true
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: check the secret
+        run: echo "${{ secrets.GALAXY_API_KEY }}"
+      - name: Build and Deploy Collection
+        uses: artis3n/ansible_galaxy_collection@v2
+        with:
+          api_key: '${{ secrets.GALAXY_API_KEY }}'
+          publish: false
