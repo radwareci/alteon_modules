@@ -77,6 +77,7 @@ jobs:
           pull-request-change-detection: true
 
   deploy:
+    needs: sanity
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
