@@ -1,3 +1,5 @@
+[![CI sanity tests & deploy to galaxy](https://github.com/radwareci/alteon_modules/actions/workflows/ansible-sanity-and-deployment.yml/badge.svg?branch=main)](https://github.com/radwareci/alteon_modules/actions/workflows/ansible-sanity-and-deployment.yml)
+
 <img src="https://www.radware.com/RadwareSite/MediaLibraries/Images/logo.svg" width="300px">
 
 # alteon_modules
