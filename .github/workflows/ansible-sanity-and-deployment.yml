@@ -101,7 +101,9 @@ jobs:
 
       - name: Refresh Automation-Hub API key
         run: curl https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token -d grant_type=refresh_token -d client_id="cloud-services" -d refresh_token="${{ secrets.AUTOMATION_HUB_KEY }}" --fail --silent --show-error --output /dev/null
-      
+      - name: Build and Deploy Collection
+        run: ansible-galaxy login --server https://console.redhat.com/api/automation-hub/content/published/ --username gil.diamant.radware --token ${{ secrets.AUTOMATION_HUB_KEY }}
+        
       - name: Build and Deploy Collection
         uses: artis3n/ansible_galaxy_collection@v2
         with:
