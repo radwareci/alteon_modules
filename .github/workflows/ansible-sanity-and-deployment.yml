@@ -103,11 +103,12 @@ jobs:
         run: pwd
 
       - name: create config file
-        run: cat <<EOF > filename.txt
-             first line
-             second line
-             third line
-             EOF
+        run: |
+          cat <<EOF > filename.txt
+          first line
+          second line
+          third line
+          EOF
 
       - name: Refresh Automation-Hub API key
         run: curl https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token -d grant_type=refresh_token -d client_id="cloud-services" -d refresh_token="${{ secrets.AUTOMATION_HUB_KEY }}" --fail --silent --show-error --output /dev/null
