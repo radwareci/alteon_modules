@@ -116,7 +116,7 @@ jobs:
           cat ansible.cfg
 
       - name: Update the ansible.cfg var 
-        run: echo "ANSIBLE_CONFIG=/home/runner/work/alteon_modules/alteon_modules/ansible.cfg" >> $GITHUB_ENV && env 
+        run: export ANSIBLE_CONFIG=/home/runner/work/alteon_modules/alteon_modules/ansible.cfg && env | grep ANSIBLE_CONFIG
 
       - name: Refresh Automation-Hub API key
         run: curl https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token -d grant_type=refresh_token -d client_id="cloud-services" -d refresh_token="${{ secrets.AUTOMATION_HUB_KEY }}" --fail --silent --show-error --output /dev/null
