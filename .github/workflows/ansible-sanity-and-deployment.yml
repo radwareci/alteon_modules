@@ -100,14 +100,20 @@ jobs:
         run: echo "${{ secrets.AUTOMATION_HUB_KEY }}"
 
       - name: test cfg file
-        run: ls -la /home
+        run: pwd
+
+      - name: create config file
+        run: cat <<EOF > filename.txt
+             first line
+             second line
+             third line
+             EOF
 
       - name: Refresh Automation-Hub API key
         run: curl https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token -d grant_type=refresh_token -d client_id="cloud-services" -d refresh_token="${{ secrets.AUTOMATION_HUB_KEY }}" --fail --silent --show-error --output /dev/null
         
       - name: Build and Deploy Collection
         uses: artis3n/ansible_galaxy_collection@v2
-        run: ls -la /etc/ansible
         with:
           api_key: '${{ secrets.AUTOMATION_HUB_KEY }}'
           publish: false
