@@ -93,6 +93,7 @@ jobs:
   deploy_automation:
     #needs: sanity
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v3
 
@@ -126,3 +127,6 @@ jobs:
         with:
           api_key: '${{ secrets.AUTOMATION_HUB_KEY }}'
           publish: true
+      
+      - name: check ansible version
+        run: ansible --version
