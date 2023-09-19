@@ -125,4 +125,4 @@ jobs:
         uses: artis3n/ansible_galaxy_collection@v2
         with:
           api_key: '${{ secrets.AUTOMATION_HUB_KEY }}'
-          publish: false
+          publish: true
