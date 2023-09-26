@@ -107,11 +107,12 @@ jobs:
         run: |
           cat <<EOF > ansible.cfg
           [galaxy]
-          server_list = automation_hub
-          
+          server_list = automation_hub, release_galaxy
           [galaxy_server.automation_hub]
           url=https://console.redhat.com/api/automation-hub/
           auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+          [galaxy_server.release_galaxy]
+          url=https://galaxy.ansible.com/
           EOF
           ls -la
           cat ansible.cfg
@@ -129,4 +130,6 @@ jobs:
           publish: false
       
       - name: check ansible
+        run: ansible-galaxy collection publish radware-alteon-1.0.0.tar.gz --api-key='${{ secrets.AUTOMATION_HUB_KEY }}' --server release_galaxy -vvv
+      - name: check ansible2
         run: ansible-galaxy collection publish radware-alteon-1.0.0.tar.gz --api-key='${{ secrets.AUTOMATION_HUB_KEY }}' --server automation_hub -vvv
