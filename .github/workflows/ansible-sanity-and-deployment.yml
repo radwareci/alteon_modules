@@ -3,8 +3,7 @@ on:
   # Run CI against all pushes to master
   push:
     branches:
-      - master
-      - dev
+      - main
 concurrency:
   group: >-
     ${{ github.workflow }}-${{
