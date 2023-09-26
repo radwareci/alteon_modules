@@ -129,7 +129,7 @@ jobs:
           api_key: '${{ secrets.AUTOMATION_HUB_KEY }}'
           publish: false
       
-      - name: check ansible
-        run: ansible-galaxy collection publish radware-alteon-1.0.0.tar.gz --api-key='${{ secrets.AUTOMATION_HUB_KEY }}' --server release_galaxy -vvv
+      # - name: check ansible
+      #   run: ansible-galaxy collection publish radware-alteon-1.0.0.tar.gz --api-key='${{ secrets.AUTOMATION_HUB_KEY }}' --server release_galaxy -vvv
       - name: check ansible2
         run: ansible-galaxy collection publish radware-alteon-1.0.0.tar.gz --api-key='${{ secrets.AUTOMATION_HUB_KEY }}' --server automation_hub -vvv
